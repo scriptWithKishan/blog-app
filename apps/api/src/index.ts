@@ -11,9 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World");
-});
+const authRouter = require("./modules/auth/auth.route");
+
+app.use("/auth", authRouter);
 
 const PORT = process.env.PORT || 5000;
 const dbConnect = require("./config/db");
