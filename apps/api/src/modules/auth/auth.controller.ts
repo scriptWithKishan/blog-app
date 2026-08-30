@@ -1,4 +1,5 @@
-import type { Request, Response } from "express";
+type Request = import("express").Request;
+type Response = import("express").Response;
 const User = require("../../models/user");
 
 const bcrypt = require("bcryptjs");
