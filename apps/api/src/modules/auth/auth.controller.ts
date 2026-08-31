@@ -70,7 +70,7 @@ const signInController = async (req: Request, res: Response) => {
       });
     }
 
-    const token = jwt.sign({ user: user }, JWT_SECRET, { expiresIn: "24h" })
+    const token = jwt.sign({ user: user._id }, JWT_SECRET, { expiresIn: "24h" })
 
     return res.status(200).json({
       message: "You have logged in successfully!",

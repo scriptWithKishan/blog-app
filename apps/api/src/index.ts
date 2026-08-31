@@ -12,8 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 const authRouter = require("./modules/auth/auth.route");
+const userRouter = require("./modules/user/user.route");
 
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 const PORT = process.env.PORT || 5000;
 const dbConnect = require("./config/db");
