@@ -13,9 +13,11 @@ app.use(express.json());
 
 const authRouter = require("./modules/auth/auth.route");
 const userRouter = require("./modules/user/user.route");
+const blogRouter = require("./modules/blog/blog.route");
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/blog", blogRouter);
 
 const PORT = process.env.PORT || 5000;
 const dbConnect = require("./config/db");
