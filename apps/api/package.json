@@ -5,6 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx --watch src/index.ts",
+    "seed:users": "tsx src/seeds/seed-users.ts",
+    "seed:blogs": "tsx src/seeds/seed-blogs.ts",
+    "seed": "tsx src/seeds/seed-users.ts && tsx src/seeds/seed-blogs.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

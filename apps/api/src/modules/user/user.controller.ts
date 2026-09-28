@@ -87,4 +87,103 @@ const updateUserData = async (req: Request, res: Response) => {
   }
 };
 
-module.exports = { getUserData, updateUserData };
+const toggleSubscribeBlogger = async (req: Request, res: Response) => {
+  try {
+    const currentUserId = extractUserId(req);
+    const bloggerId = req.params.bloggerId || req.body.bloggerId;
+
+    if (!bloggerId) {
+      return res.status(400).json({
+        message: "Blogger ID is required!",
+      });
+    }
+
+    if (currentUserId.toString() === bloggerId.toString()) {
+      return res.status(400).json({
+        message: "You cannot subscribe to yourself!",
+      });
+    }
+
+    const targetBlogger = await User.findById(bloggerId);
+
+    if (!targetBlogger) {
+      return res.status(404).json({
+        message: "Blogger not found!",
+      });
+    }
+
+    const currentUser = await User.findById(currentUserId);
+
+    if (!currentUser) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
+    }
+
+    const isSubscribed = currentUser.subscribedBloggers?.includes(
+      bloggerId.toString()
+    );
+
+    if (isSubscribed) {
+      await User.findByIdAndUpdate(currentUserId, {
+        $pull: { subscribedBloggers: bloggerId.toString() },
+      });
+    } else {
+      await User.findByIdAndUpdate(currentUserId, {
+        $addToSet: { subscribedBloggers: bloggerId.toString() },
+      });
+    }
+
+    const updatedUser = await User.findById(currentUserId).select("-password");
+
+    return res.status(200).json({
+      message: isSubscribed
+        ? "Unsubscribed successfully!"
+        : "Subscribed successfully!",
+      isSubscribed: !isSubscribed,
+      user: updatedUser,
+    });
+  } catch (err: any) {
+    console.error("Error in toggleSubscribeBlogger:", err.message);
+    return res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
+};
+
+const searchUsers = async (req: Request, res: Response) => {
+  try {
+    const query = req.query.query as string;
+    if (!query || !query.trim()) {
+      return res.status(200).json({ users: [] });
+    }
+
+    const searchRegex = new RegExp(query.trim(), "i");
+
+    const users = await User.find({
+      username: searchRegex,
+    })
+      .select("username bio _id")
+      .limit(10);
+
+    return res.status(200).json({
+      message: "Users found successfully!",
+      users,
+    });
+  } catch (err: any) {
+    console.error("Error in searchUsers:", err.message);
+    return res.status(500).json({
+      message: "Internal server error!",
+    });
+  }
+};
+
+
+module.exports = {
+  getUserData,
+  updateUserData,
+  toggleSubscribeBlogger,
+  searchUsers,
+};
+
+

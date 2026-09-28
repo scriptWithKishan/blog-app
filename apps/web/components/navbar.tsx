@@ -6,9 +6,9 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 const NAV_LINKS = [
+  { name: "Home", href: "/" },
   { name: "Explore", href: "/explore" },
   { name: "Communities", href: "/communities" },
-  { name: "Write", href: "/write" },
   { name: "Settings", href: "/settings" },
   { name: "Profile", href: "/profile" }
 ];
